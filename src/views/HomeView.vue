@@ -2,46 +2,59 @@
 import { ref } from "vue";
 import draggable from "vuedraggable";
 
-const enabled = ref(true);
-const dragging = ref(false);
-const list = ref([
+const list1 = ref([
   { id: 1, name: "Item 1" },
   { id: 2, name: "Item 2" },
   { id: 3, name: "Item 3" },
   { id: 4, name: "Item 4" },
 ]);
 
-const checkMove = (e: any) => {
-  console.log("Future index: " + e.draggedContext.futureIndex);
+const list2 = ref([
+  { id: 5, name: "Item 5" },
+  { id: 6, name: "Item 6" },
+  { id: 7, name: "Item 7" },
+]);
+
+const log = (evt: any) => {
+  console.log(evt);
+};
+
+const clone = (el) => {
+  el.name + " cloned";
 };
 </script>
 
 <template>
   <main>
     <section class="section">
-      <div class="">
-        <h1>Lista 1</h1>
+      <div class="wrapper">
+        <h3>Draggable 1</h3>
         <draggable
-          :list="list"
-          :disabled="!enabled"
+          :list="list1"
           item-key="name"
           class="list-group"
-          ghost-class="ghost"
-          :move="checkMove"
-          @start="dragging = true"
-          @end="dragging = false"
+          @change="log"
+          group="people"
         >
-          <template #item="{ element }">
-            <div class="list-group-item" :class="{ 'not-draggable': !enabled }">
-              {{ element.name }}
-            </div>
+          <template #item="{ element, index }">
+            <div class="list-group-item">{{ element.name }} {{ index }}</div>
           </template>
         </draggable>
       </div>
-      <!-- <div>
-        <h1>Lista 2</h1>
-        <div class="wrapper"></div>
-      </div> -->
+      <div class="wrapper">
+        <h3>Draggable 2</h3>
+        <draggable
+          :list="list2"
+          item-key="name"
+          class="list-group"
+          @change="log"
+          group="people"
+        >
+          <template #item="{ element, index }">
+            <div class="list-group-item">{{ element.name }} {{ index }}</div>
+          </template>
+        </draggable>
+      </div>
     </section>
   </main>
 </template>
@@ -50,7 +63,7 @@ const checkMove = (e: any) => {
 .section {
   outline: 1px solid #ccc;
   display: flex;
-  width: 100%;
+  width: 800px;
 }
 
 .list-group {
@@ -62,8 +75,7 @@ const checkMove = (e: any) => {
   border: 2px solid rgb(53, 5, 49);
   background-color: rgb(46, 32, 32);
   padding: 2rem;
-  margin: 2rem;
-  width: 600px;
+  width: 100%;
   cursor: move;
 }
 
